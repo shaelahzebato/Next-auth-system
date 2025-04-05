@@ -13,20 +13,23 @@ function SignUpPage() {
     const [success, setSuccess] = useState("");
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        console.log("event ::: ", event);
+        
         event.preventDefault();
         setLoading(true);
         setError("");
         setSuccess("");
 
         const formData = new FormData(event.currentTarget);
+        const name = formData.get("name") as string;
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-
+        console.log("name email password ::: ", name, email, password);
         try {
             const response = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ name, email, password }),
             });
 
             const data = await response.json();
@@ -62,6 +65,7 @@ function SignUpPage() {
                     </div>
                 </div>
                 <form onSubmit={handleSubmit} className='flex flex-col space-y-6'>
+                    <Input type="text" placeholder='Name' name="name" required autoComplete="name" />
                     <Input type="text" placeholder='Email' name="email" required autoComplete="email" />
                     <Input type="password" placeholder='Mot de passe' name="password" required autoComplete="new-password" />
                     {error && <p className="text-red-500 text-sm">{error}</p>}

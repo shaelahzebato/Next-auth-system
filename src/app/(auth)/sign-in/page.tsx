@@ -20,7 +20,7 @@ function SignInPage() {
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-
+        
         const result = await signIn("credentials", {
             email,
             password,
@@ -29,6 +29,16 @@ function SignInPage() {
 
         if (result?.error) {
             setError("Email ou mot de passe incorrect");
+        } else if (result?.ok) {
+            // Obtenir les infos de session pour connaître le rôle
+            const sessionRes = await fetch("/api/auth/session");
+            const session = await sessionRes.json();
+          
+            if (session?.user?.role === "admin") {
+                window.location.href = "/admin";
+            } else {
+                window.location.href = "/dashboard";
+            }
         }
 
         setLoading(false);
