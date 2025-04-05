@@ -13,10 +13,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     session: {
         strategy: "jwt",
-    },
-    // pages: {
-    //     signOut: "/sign-in", // 🔄 Redirection par défaut après déconnexion
-    // },      
+    },   
     secret: process.env.NEXTAUTH_SECRET,
     providers: [
         GitHubProvider({
@@ -58,7 +55,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     role: user.role ?? "CLIENT",
                 };
             },
-        }),
+        }),        
+        // pages: {
+        //     signOut: "/sign-in", // Redirection par défaut après déconnexion
+        // },   
     ],
     callbacks: {
         // Ajoute les données du user au JWT
@@ -87,20 +87,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 }satisfies NextAuthConfig) 
 
 
-//   authorize: async (credentials) => {
-    //     if (!credentials?.email || !credentials?.password) {
-    //       throw new Error("Email et mot de passe requis");
-    //     }
-
-    //     const user = await prisma.user.findUnique({
-    //       where: { email: credentials.email },
-    //     });
-
-    //     if (!user || !user.password) {
-    //       throw new Error("Utilisateur non trouvé");
-    //     }
-
-    //     const isValidPassword = await compare(credentials.password, user.password);
-    //     if (!isValidPassword) {
-    //       throw new Error("Mot de passe incorrect");
-    //     }
+/*authorize: async (credentials) => {
+    if (!credentials?.email || !credentials?.password) {
+      throw new Error("Email et mot de passe requis");
+    }
+    const user = await prisma.user.findUnique({
+      where: { email: credentials.email },
+    });
+    if (!user || !user.password) {
+      throw new Error("Utilisateur non trouvé");
+    }
+    const isValidPassword = await compare(credentials.password, user.password);
+    if (!isValidPassword) {
+      throw new Error("Mot de passe incorrect");
+    }
+}*/

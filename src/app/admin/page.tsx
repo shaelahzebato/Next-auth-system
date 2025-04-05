@@ -1,5 +1,6 @@
 "use client"
 import SignOutBtn from "@/components/sign-out";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSession } from 'next-auth/react'
 import { redirect } from "next/navigation";
 
@@ -16,17 +17,27 @@ export default async function AdminPage() {
     }
 
     return (
-        <div>
-            <h1>Bienvenue dans l’espace admin 👑</h1>
-            <p>Bonjour {session?.user?.name}</p>
-            <SignOutBtn/>
+        <div className="max-w-xl mx-auto min-h-screen flex justify-center items-center">
+            <Card className='w-full flex flex-col justify-center items-center'>
+                <CardHeader className='w-full flex items-center justify-center'>
+                    <CardTitle>Bienvenue dans l’espace admin 👑</CardTitle>
+                </CardHeader>
+                <CardContent className='flex flex-col space-y-2 items-center justify-center'>
+                    <p>Bonjour {session?.user?.name} !</p>
+                    <p>Bienvenue cher admin.</p>
+                    <p>{session?.user?.email}</p>
+                </CardContent>
+                <CardFooter>
+                    <SignOutBtn/>
+                </CardFooter>
+            </Card>
         </div>
     );
 }
 
 
 
-/*AUTRE FACONS DE FAIRE...
+/*AUTRE FACON DE FAIRE...
 
 "use client"
 import SignOutBtn from "@/components/sign-out";
