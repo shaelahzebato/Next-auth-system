@@ -6,6 +6,7 @@ import { compare } from "bcryptjs";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import type { NextAuthConfig } from "next-auth";
+import { sendWelcomeEmail } from "@/lib/emails/send-welcome-email";
 
 const prisma = new PrismaClient();
 
@@ -48,6 +49,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 if (!isValidPassword) {
                     throw new Error("Mot de passe incorrect");
                 }
+
+                // Envoi de mail après connexion
+                await sendWelcomeEmail(user.email, user.name ?? "Cher utilisateur");
+
+                /*if (!user.hasBeenWelcomed) {
+                    await sendWelcomeEmail(user.email, user.name);
+                    await prisma.user.update({
+                      where: { id: user.id },
+                      data: { hasBeenWelcomed: true },
+                    });
+                }*/
+
                 return {
                     id: user.id,
                     name: user.name,
@@ -84,21 +97,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
     },
     trustHost: true,
-}satisfies NextAuthConfig) 
-
-
-/*authorize: async (credentials) => {
-    if (!credentials?.email || !credentials?.password) {
-      throw new Error("Email et mot de passe requis");
-    }
-    const user = await prisma.user.findUnique({
-      where: { email: credentials.email },
-    });
-    if (!user || !user.password) {
-      throw new Error("Utilisateur non trouvé");
-    }
-    const isValidPassword = await compare(credentials.password, user.password);
-    if (!isValidPassword) {
-      throw new Error("Mot de passe incorrect");
-    }
-}*/
+}satisfies NextAuthConfig)

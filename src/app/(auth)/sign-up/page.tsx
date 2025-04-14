@@ -25,6 +25,7 @@ function SignUpPage() {
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
         console.log("name email password ::: ", name, email, password);
+        
         try {
             const response = await fetch("/api/auth/register", {
                 method: "POST",
